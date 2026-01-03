@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for CIA-SIE */
+@layer base {
+  body {
+    @apply bg-gray-100 text-gray-900;
+  }
+}
+
+@layer components {
+  /* Card component */
+  .card {
+    @apply bg-white rounded-lg shadow-md p-4;
+  }
+
+  /* Status badges */
+  .badge {
+    @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+  }
+
+  .badge-bullish {
+    @apply bg-green-100 text-green-800;
+  }
+
+  .badge-bearish {
+    @apply bg-red-100 text-red-800;
+  }
+
+  .badge-neutral {
+    @apply bg-gray-100 text-gray-800;
+  }
+
+  /* Freshness indicators */
+  .freshness-current {
+    @apply text-green-600;
+  }
+
+  .freshness-recent {
+    @apply text-yellow-600;
+  }
+
+  .freshness-stale {
+    @apply text-red-600;
+  }
+
+  .freshness-unavailable {
+    @apply text-gray-400;
+  }
+
+  /* Button styles */
+  .btn {
+    @apply px-4 py-2 rounded-md font-medium transition-colors;
+  }
+
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+  }
+
+  /* Contradiction alert */
+  .contradiction-alert {
+    @apply bg-amber-50 border-l-4 border-amber-400 p-4;
+  }
+}

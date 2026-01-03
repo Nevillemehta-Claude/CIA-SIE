@@ -1,0 +1,77 @@
+# CIA-SIE Backend Study - Cursor Ignore File
+# ═══════════════════════════════════════════════════════════════════════════════
+# PURPOSE: Isolate Cursor from frontend code during clean-room backend analysis
+# USAGE: Rename this to .cursorignore before starting backend study
+# RESTORE: After study, rename original .cursorignore.original back to .cursorignore
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# FRONTEND CODE - COMPLETELY FORBIDDEN DURING STUDY
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Frontend directory - DO NOT INDEX
+frontend/
+frontend/**
+/frontend/**/*
+
+# Standalone HTML files (previous frontend attempts)
+app.html
+GUI_Interactive_Demonstration.html
+CIA-SIE_APPLICATION_FLOWCHART.html
+docs/ARCHITECTURE_DIAGRAMS_VIEWER.html
+
+# Any JSX/TSX files anywhere
+**/*.jsx
+**/*.tsx
+
+# CSS/SCSS files
+**/*.css
+**/*.scss
+**/*.sass
+
+# Frontend dependencies
+node_modules/
+**/node_modules/**
+
+# Frontend build outputs
+dist/
+build/
+.next/
+out/
+
+# Frontend config files
+vite.config.*
+webpack.config.*
+next.config.*
+tailwind.config.*
+postcss.config.*
+tsconfig.json
+jsconfig.json
+package.json
+package-lock.json
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# VERSION CONTROL - ALWAYS EXCLUDED
+# ═══════════════════════════════════════════════════════════════════════════════
+
+.git/
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SESSION/CONTEXT FILES THAT MIGHT CONTAIN FRONTEND MEMORY
+# ═══════════════════════════════════════════════════════════════════════════════
+
+SESSION_RESUME_INSTRUCTIONS.md
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PERMITTED BACKEND CODE (NOT IGNORED)
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# ✅ /src/cia_sie/              Backend Python application
+# ✅ /tests/                    Backend test suites (834 tests)
+# ✅ /alembic/                  Database migrations
+# ✅ /pyproject.toml            Python project config
+# ✅ /.env                      Environment configuration
+# ✅ /docs/*.md                 Markdown documentation
+# ✅ /specifications/           Design specifications
+#
+# ═══════════════════════════════════════════════════════════════════════════════

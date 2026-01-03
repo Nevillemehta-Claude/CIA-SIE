@@ -1,0 +1,247 @@
+# CIA-SIE Gold Standard Audit Rules
+# Version: 1.0.0
+# Date: 02 January 2026
+# Purpose: Guide Cursor through comprehensive Gold Standard Audit
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# MASTER GOVERNANCE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## Primary Authority
+The Gold Standard Specification is the SINGLE SOURCE OF TRUTH:
+```
+specifications/architecture/00_GOLD_STANDARD_SPECIFICATION.md
+```
+
+## Supporting Documents
+```
+AI_HANDOFF/HANDOFF_00_README.md          → Master index
+AI_HANDOFF/HANDOFF_03_CONSTITUTIONAL_RULES.md → Inviolable rules
+AI_HANDOFF/HANDOFF_04_TECHNICAL_STANDARDS.md  → Engineering standards
+AI_HANDOFF/HANDOFF_08_IMPLEMENTATION_STATUS.md → Current state
+```
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# AUDIT OBJECTIVE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## Mission
+Conduct a comprehensive, evidence-based audit to verify 80-100% compliance with
+the Gold Standard Specification across all application layers.
+
+## Audit Methodology
+- NASA-style rigor: exhaustive, systematic, traceable
+- Evidence-based: every finding must cite file:line references
+- Objective: no assumptions, only verified facts
+- Complete: every requirement must be validated
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# THREE CONSTITUTIONAL RULES (INVIOLABLE)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## Rule 1: Decision-Support, NOT Decision-Making
+- System provides INFORMATION only
+- NEVER suggests, recommends, or implies action
+- FORBIDDEN: "should", "recommend", "suggest", "consider"
+
+## Rule 2: Expose Contradictions, NEVER Resolve Them
+- When charts disagree, SHOW BOTH SIDES with equal prominence
+- NEVER weight or prioritize signals
+- NEVER aggregate conflicting signals
+
+## Rule 3: Descriptive AI, NOT Prescriptive AI
+- AI narratives DESCRIBE data, NEVER PRESCRIBE action
+- MANDATORY disclaimer on ALL AI output:
+  "This is a description of what your charts are showing.
+   The interpretation and any decision is entirely yours."
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# PROHIBITED PATTERNS (CONSTITUTIONAL VIOLATIONS)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+The following patterns are STRICTLY PROHIBITED:
+
+## In Code
+- weight, score, confidence columns in database models
+- Signal aggregation or consensus calculation
+- Buy/sell recommendation logic
+- Prediction algorithms
+
+## In UI
+- Aggregated sentiment displays (e.g., "Overall: BULLISH")
+- Confidence percentages or reliability scores
+- Action buttons (Buy/Sell/Enter/Exit)
+- Visual weighting that favors one signal over another
+
+## In AI Output
+- "I recommend...", "You should...", "Consider..."
+- Predictions or forecasts
+- Conflict resolution between contradicting signals
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# AUDIT SCOPE
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## Full Access (READ/WRITE)
+- src/cia_sie/          → Backend application code
+- frontend/             → Frontend application code
+- tests/                → Test suites
+- specifications/       → Design specifications
+- AI_HANDOFF/       → Handoff documentation
+- .github/workflows/    → CI/CD pipelines
+- alembic/              → Database migrations
+
+## Read-Only Reference
+- CIA-SIE_INTERACTIVE_USER_MANUAL.html → Visual design reference
+
+## Out of Scope
+- .git/                 → Version control internals
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# QUALITY GATES
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## Gate 1: Constitutional Compliance
+- [ ] No prohibited patterns in codebase
+- [ ] All AI outputs include mandatory disclaimer
+- [ ] No signal weighting or aggregation
+- [ ] Contradictions displayed with equal visual weight
+
+## Gate 2: Test Coverage
+- [ ] Unit test coverage ≥ 80%
+- [ ] Integration test coverage ≥ 70%
+- [ ] All constitutional rules have dedicated tests
+- [ ] No skipped or disabled tests without justification
+
+## Gate 3: Code Quality
+- [ ] No TypeScript `any` types
+- [ ] Cyclomatic complexity < 10 per function
+- [ ] Ruff linting passes (Python)
+- [ ] ESLint passes (TypeScript)
+
+## Gate 4: API Compliance
+- [ ] All endpoints documented in OpenAPI spec
+- [ ] All endpoints have request/response validation
+- [ ] Error responses follow standard format
+- [ ] Rate limiting implemented
+
+## Gate 5: Security
+- [ ] No hardcoded secrets or credentials
+- [ ] Input validation on all user inputs
+- [ ] SQL injection prevention verified
+- [ ] XSS prevention verified
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# AUDIT OUTPUT REQUIREMENTS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## Output Location
+All audit deliverables shall be deposited in:
+```
+~/Downloads/Gold Standard Audit Process/
+```
+
+## Required Deliverables
+
+### 1. AUDIT_SUMMARY.md
+- Executive summary of findings
+- Overall compliance percentage
+- Critical issues requiring immediate attention
+
+### 2. CONSTITUTIONAL_COMPLIANCE_REPORT.md
+- Rule-by-rule verification
+- Evidence citations (file:line)
+- Pass/Fail status for each check
+
+### 3. TEST_COVERAGE_REPORT.md
+- Current coverage metrics
+- Gap analysis
+- Recommendations for coverage improvement
+
+### 4. CODE_QUALITY_REPORT.md
+- Linting results
+- Complexity analysis
+- Type safety verification
+
+### 5. REQUIREMENTS_TRACEABILITY_MATRIX.md
+- Specification requirement → Implementation mapping
+- Coverage status for each requirement
+- Missing implementations identified
+
+### 6. REMEDIATION_PLAN.md (if needed)
+- Prioritized list of issues to fix
+- Estimated effort for each fix
+- Suggested implementation approach
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# AUDIT EXECUTION PROTOCOL
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## Phase 1: Discovery
+1. Read Gold Standard Specification completely
+2. Read all AI_HANDOFF documents
+3. Inventory current implementation state
+4. Document baseline metrics
+
+## Phase 2: Verification
+1. Verify constitutional compliance (Rule 1, 2, 3)
+2. Run all test suites, document results
+3. Execute linting and quality checks
+4. Review API endpoint compliance
+5. Assess security posture
+
+## Phase 3: Analysis
+1. Compare implementation against specification
+2. Calculate compliance percentages
+3. Identify gaps and deviations
+4. Categorize findings by severity
+
+## Phase 4: Reporting
+1. Generate all required deliverables
+2. Deposit reports in designated output location
+3. Summarize key findings
+4. Provide remediation recommendations
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# SEVERITY CLASSIFICATION
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## CRITICAL (Must Fix Immediately)
+- Constitutional rule violations
+- Security vulnerabilities
+- Data integrity issues
+
+## HIGH (Fix Before Release)
+- Failed quality gates
+- Missing required features
+- API contract violations
+
+## MEDIUM (Fix Soon)
+- Test coverage gaps
+- Code quality issues
+- Documentation misalignment
+
+## LOW (Track for Future)
+- Minor style inconsistencies
+- Enhancement opportunities
+- Performance optimizations
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# GENERAL CONDUCT
+# ═══════════════════════════════════════════════════════════════════════════════
+
+## Principles
+- Be thorough: check everything, assume nothing
+- Be objective: report facts, not opinions
+- Be precise: cite specific file:line references
+- Be actionable: provide clear remediation steps
+
+## Communication
+- Document findings as you discover them
+- Flag critical issues immediately
+- Provide progress updates at phase boundaries
+
+## Integrity
+- Do not modify code during audit phase
+- Do not skip checks for convenience
+- Report ALL findings, favorable and unfavorable

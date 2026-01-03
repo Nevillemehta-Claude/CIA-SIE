@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIA-SIE Architecture Diagrams</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #eee;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            opacity: 0.7;
+            font-size: 1rem;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav button {
+            padding: 0.75rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        nav button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        nav button.active {
+            background: #3498db;
+            border-color: #3498db;
+        }
+
+        main {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .diagram-container {
+            display: none;
+            background: #fff;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+        }
+
+        .diagram-container.active {
+            display: block;
+        }
+
+        .diagram-container h2 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .diagram-container p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .mermaid {
+            text-align: center;
+        }
+
+        .mermaid svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            opacity: 0.6;
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .note-box {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 1rem;
+            margin: 1rem 0;
+            color: #333;
+        }
+
+        .note-box strong {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+            }
+
+            nav button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CIA-SIE Architecture Diagrams</h1>
+        <p class="subtitle">Chart Intelligence Auditor & Signal Intelligence Engine</p>
+    </header>
+
+    <nav>
+        <button class="active" onclick="showDiagram('system')">System Architecture</button>
+        <button onclick="showDiagram('data')">Data Model</button>
+        <button onclick="showDiagram('signal')">Signal Flow</button>
+        <button onclick="showDiagram('exposure')">Exposure Detection</button>
+        <button onclick="showDiagram('narrative')">AI Narrative</button>
+        <button onclick="showDiagram('kite')">Kite OAuth</button>
+        <button onclick="showDiagram('constitutional')">Constitutional Rules</button>
+        <button onclick="showDiagram('api')">API Endpoints</button>
+        <button onclick="showDiagram('journey')">User Journey</button>
+    </nav>
+
+    <main>
+        <!-- System Architecture -->
+        <div id="system" class="diagram-container active">
+            <h2>High-Level System Architecture</h2>
+            <p>The layered architecture showing all system components from external integrations to the database layer.</p>
+            <div class="mermaid">
+flowchart TB
+    subgraph External["External Layer"]
+        TV[TradingView Webhooks]
+        KITE[Zerodha Kite API]
+        CLAUDE[Claude AI API]
+    end
+
+    subgraph API["API Layer - FastAPI"]
+        INST_API["/api/v1/instruments"]
+        SILO_API["/api/v1/silos"]
+        CHART_API["/api/v1/charts"]
+        SIG_API["/api/v1/signals"]
+        PLAT_API["/api/v1/platforms"]
+    end
+
+    subgraph Business["Business Logic Layer"]
+        SIG_SVC[Signal Service]
+        EXP_ENG[Exposure Engine]
+        NAR_GEN[Narrative Generator]
+        KITE_ADAPT[Kite Adapter]
+    end
+
+    subgraph Data["Data Access Layer"]
+        INST_REPO[Instrument Repository]
+        SILO_REPO[Silo Repository]
+        CHART_REPO[Chart Repository]
+        SIG_REPO[Signal Repository]
+    end
+
+    subgraph Storage["Storage Layer"]
+        DB[(SQLite Database)]
+    end
+
+    TV --> SIG_API
+    KITE --> PLAT_API
+    NAR_GEN --> CLAUDE
+
+    INST_API --> INST_REPO
+    SILO_API --> SILO_REPO
+    CHART_API --> CHART_REPO
+    SIG_API --> SIG_SVC
+    PLAT_API --> KITE_ADAPT
+
+    SIG_SVC --> SIG_REPO
+    SIG_SVC --> EXP_ENG
+    EXP_ENG --> NAR_GEN
+    KITE_ADAPT --> KITE
+
+    INST_REPO --> DB
+    SILO_REPO --> DB
+    CHART_REPO --> DB
+    SIG_REPO --> DB
+
+    style External fill:#e1f5fe
+    style API fill:#fff3e0
+    style Business fill:#f3e5f5
+    style Data fill:#e8f5e9
+    style Storage fill:#fce4ec
+            </div>
+            <div class="legend">
+                <div class="legend-item"><span class="legend-color" style="background:#e1f5fe"></span> External Systems</div>
+                <div class="legend-item"><span class="legend-color" style="background:#fff3e0"></span> API Layer</div>
+                <div class="legend-item"><span class="legend-color" style="background:#f3e5f5"></span> Business Logic</div>
+                <div class="legend-item"><span class="legend-color" style="background:#e8f5e9"></span> Data Access</div>
+                <div class="legend-item"><span class="legend-color" style="background:#fce4ec"></span> Storage</div>
+            </div>
+        </div>
+
+        <!-- Data Model -->
+        <div id="data" class="diagram-container">
+            <h2>Data Model - Entity Relationships</h2>
+            <p>The hierarchical data model showing how Instruments contain Silos, Silos contain Charts, and Charts receive Signals.</p>
+            <div class="mermaid">
+erDiagram
+    INSTRUMENT ||--o{ SILO : contains
+    SILO ||--o{ CHART : contains
+    CHART ||--o{ SIGNAL : receives
+
+    INSTRUMENT {
+        uuid id PK
+        string symbol UK
+        string name
+        string exchange
+        string instrument_type
+        boolean is_active
+        datetime created_at
+    }
+
+    SILO {
+        uuid id PK
+        uuid instrument_id FK
+        string name
+        string description
+        string timeframe_group
+        json metadata
+    }
+
+    CHART {
+        uuid id PK
+        uuid silo_id FK
+        string timeframe
+        string chart_type
+        string tradingview_url
+        boolean is_active
+    }
+
+    SIGNAL {
+        uuid id PK
+        uuid chart_id FK
+        string signal_type
+        string direction
+        float price
+        float strength
+        string indicator_name
+        datetime timestamp
+    }
+            </div>
+        </div>
+
+        <!-- Signal Flow -->
+        <div id="signal" class="diagram-container">
+            <h2>Signal Ingestion Flow</h2>
+            <p>The complete flow from TradingView webhook to database storage and exposure analysis.</p>
+            <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant TV as TradingView
+    participant WH as Webhook Endpoint
+    participant VAL as Signal Validator
+    participant SVC as Signal Service
+    participant DB as Database
+    participant EXP as Exposure Engine
+
+    TV->>WH: POST /api/v1/signals/webhook
+    Note over TV,WH: JSON payload with signal data
+
+    WH->>VAL: Validate payload schema
+
+    alt Invalid Payload
+        VAL-->>WH: ValidationError
+        WH-->>TV: 422 Unprocessable Entity
+    else Valid Payload
+        VAL-->>WH: Validated SignalCreate
+        WH->>SVC: create_signal(signal_data)
+        SVC->>DB: INSERT INTO signals
+        DB-->>SVC: Signal created
+
+        SVC->>EXP: analyze_exposures(chart_id)
+        Note over EXP: Async background task
+
+        SVC-->>WH: Signal created
+        WH-->>TV: 201 Created
+    end
+            </div>
+        </div>
+
+        <!-- Exposure Detection -->
+        <div id="exposure" class="diagram-container">
+            <h2>Contradiction & Confirmation Detection</h2>
+            <p>How the Exposure Engine identifies conflicting or confirming signals across different timeframes.</p>
+            <div class="mermaid">
+flowchart TD
+    START([New Signal Received]) --> FETCH[Fetch all signals<br/>for same instrument]
+    FETCH --> GROUP[Group signals by<br/>chart/timeframe]
+    GROUP --> COMPARE{Compare<br/>directions}
+
+    COMPARE -->|Same Direction<br/>Different Timeframes| CONF[CONFIRMATION<br/>Detected]
+    COMPARE -->|Opposite Direction<br/>Different Timeframes| CONTRA[CONTRADICTION<br/>Detected]
+    COMPARE -->|Same Direction<br/>Same Timeframe| REINFORCE[Signal<br/>Reinforcement]
+    COMPARE -->|No Related<br/>Signals| ISOLATED[Isolated<br/>Signal]
+
+    CONF --> WEIGHT_C[Calculate<br/>Confirmation Weight]
+    CONTRA --> WEIGHT_X[Calculate<br/>Contradiction Weight]
+
+    WEIGHT_C --> STORE_EXP[Store Exposure<br/>Record]
+    WEIGHT_X --> STORE_EXP
+    REINFORCE --> STORE_EXP
+    ISOLATED --> STORE_EXP
+
+    STORE_EXP --> NOTIFY[Trigger UI<br/>Notification]
+
+    style CONF fill:#c8e6c9,stroke:#2e7d32
+    style CONTRA fill:#ffcdd2,stroke:#c62828
+    style REINFORCE fill:#fff9c4,stroke:#f9a825
+    style ISOLATED fill:#e1f5fe,stroke:#0277bd
+            </div>
+            <div class="legend">
+                <div class="legend-item"><span class="legend-color" style="background:#c8e6c9"></span> Confirmation</div>
+                <div class="legend-item"><span class="legend-color" style="background:#ffcdd2"></span> Contradiction</div>
+                <div class="legend-item"><span class="legend-color" style="background:#fff9c4"></span> Reinforcement</div>
+                <div class="legend-item"><span class="legend-color" style="background:#e1f5fe"></span> Isolated</div>
+            </div>
+        </div>
+
+        <!-- AI Narrative -->
+        <div id="narrative" class="diagram-container">
+            <h2>AI Narrative Generation Pipeline</h2>
+            <p>How narratives are generated using Claude AI with constitutional filtering to ensure compliance.</p>
+            <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant UI as User Interface
+    participant API as Narrative API
+    participant SVC as Narrative Service
+    participant FILTER as Constitutional Filter
+    participant CLAUDE as Claude AI
+
+    UI->>API: GET /narratives/{instrument_id}
+    API->>SVC: generate_narrative(instrument_id)
+
+    SVC->>SVC: Build context prompt
+    Note over SVC: Include signals, contradictions,<br/>timeframes, indicators
+
+    SVC->>CLAUDE: Generate narrative
+    CLAUDE-->>SVC: Raw AI response
+
+    SVC->>FILTER: apply_constitutional_rules(response)
+
+    alt Contains Prohibited Patterns
+        FILTER->>FILTER: Remove prescriptive language
+        FILTER->>FILTER: Add mandatory disclaimer
+        FILTER-->>SVC: Filtered narrative
+    else Clean Response
+        FILTER-->>SVC: Approved narrative
+    end
+
+    SVC-->>API: NarrativeResponse
+    API-->>UI: JSON with narrative + disclaimer
+            </div>
+            <div class="note-box">
+                <strong>Constitutional Filter Checks:</strong>
+                1. No "should", "recommend", "suggest", "must"<br>
+                2. Does not resolve contradictions<br>
+                3. Purely descriptive language<br>
+                4. Mandatory disclaimer attached
+            </div>
+        </div>
+
+        <!-- Kite OAuth -->
+        <div id="kite" class="diagram-container">
+            <h2>Zerodha Kite OAuth Integration</h2>
+            <p>The complete OAuth flow for connecting to Zerodha Kite and importing watchlists.</p>
+            <div class="mermaid">
+sequenceDiagram
+    autonumber
+    participant User as User Browser
+    participant App as CIA-SIE Backend
+    participant Kite as Kite Connect API
+
+    User->>App: Click "Connect Kite"
+    App->>App: Generate state token
+    App-->>User: Redirect to Kite login
+
+    User->>Kite: Login with credentials
+    Kite->>Kite: Authenticate user
+    Kite-->>User: Redirect with request_token
+
+    User->>App: GET /callback?request_token=xxx
+    App->>Kite: Exchange request_token for access_token
+    Kite-->>App: access_token + user info
+    App->>App: Store tokens securely
+    App-->>User: Success! Connected
+
+    Note over User,Kite: Watchlist Import
+
+    User->>App: Import watchlist
+    App->>Kite: GET /portfolio/holdings
+    Kite-->>App: Holdings data
+    App->>App: Create instruments from holdings
+    App-->>User: Watchlist imported
+            </div>
+        </div>
+
+        <!-- Constitutional Rules -->
+        <div id="constitutional" class="diagram-container">
+            <h2>The Three Constitutional Rules</h2>
+            <p>The inviolable rules that govern all AI output in the CIA-SIE system.</p>
+            <div class="mermaid">
+flowchart TD
+    subgraph Rule1["RULE 1: Decision-Support ONLY"]
+        R1_CHECK{Contains prescriptive<br/>language?}
+        R1_FAIL[VIOLATION: Remove<br/>'should', 'recommend', 'suggest']
+        R1_PASS[PASS: Descriptive only]
+    end
+
+    subgraph Rule2["RULE 2: Never Resolve Contradictions"]
+        R2_CHECK{Resolves a<br/>contradiction?}
+        R2_FAIL[VIOLATION: Rebalance<br/>to equal weight]
+        R2_PASS[PASS: Both sides<br/>shown equally]
+    end
+
+    subgraph Rule3["RULE 3: Descriptive NOT Prescriptive"]
+        R3_CHECK{Implies action<br/>or interpretation?}
+        R3_FAIL[VIOLATION: Convert<br/>to pure observation]
+        R3_PASS[PASS: Data only]
+    end
+
+    INPUT[AI Raw Output] --> R1_CHECK
+    R1_CHECK -->|Yes| R1_FAIL
+    R1_CHECK -->|No| R1_PASS
+    R1_FAIL --> R1_PASS
+    R1_PASS --> R2_CHECK
+
+    R2_CHECK -->|Yes| R2_FAIL
+    R2_CHECK -->|No| R2_PASS
+    R2_FAIL --> R2_PASS
+    R2_PASS --> R3_CHECK
+
+    R3_CHECK -->|Yes| R3_FAIL
+    R3_CHECK -->|No| R3_PASS
+    R3_FAIL --> R3_PASS
+
+    R3_PASS --> DISCLAIMER[Add Mandatory<br/>Disclaimer]
+    DISCLAIMER --> OUTPUT[Compliant Output]
+
+    style R1_FAIL fill:#ffcdd2
+    style R2_FAIL fill:#ffcdd2
+    style R3_FAIL fill:#ffcdd2
+    style R1_PASS fill:#c8e6c9
+    style R2_PASS fill:#c8e6c9
+    style R3_PASS fill:#c8e6c9
+    style OUTPUT fill:#c8e6c9
+            </div>
+        </div>
+
+        <!-- API Endpoints -->
+        <div id="api" class="diagram-container">
+            <h2>API Endpoint Reference</h2>
+            <p>Complete REST API endpoint structure for the CIA-SIE application.</p>
+            <div class="mermaid">
+flowchart TD
+    ROOT["/api/v1"] --> INST["/instruments"]
+    ROOT --> SILO["/silos"]
+    ROOT --> CHART["/charts"]
+    ROOT --> SIG["/signals"]
+    ROOT --> PLAT["/platforms"]
+
+    INST --> INST_CRUD["GET /  POST /<br/>GET /{id}  PUT /{id}  DELETE /{id}<br/>GET /{id}/silos"]
+
+    SILO --> SILO_CRUD["GET /  POST /<br/>GET /{id}  PUT /{id}  DELETE /{id}<br/>GET /{id}/charts"]
+
+    CHART --> CHART_CRUD["GET /  POST /<br/>GET /{id}  PUT /{id}  DELETE /{id}<br/>GET /{id}/signals"]
+
+    SIG --> SIG_OPS["GET /<br/>POST /webhook<br/>GET /{id}  DELETE /{id}"]
+
+    PLAT --> KITE["/kite"]
+    KITE --> KITE_OPS["GET /login<br/>GET /callback<br/>GET /status<br/>POST /import"]
+
+    style ROOT fill:#e3f2fd
+    style INST fill:#fff9c4
+    style SILO fill:#f3e5f5
+    style CHART fill:#e8f5e9
+    style SIG fill:#ffccbc
+    style PLAT fill:#bbdefb
+            </div>
+        </div>
+
+        <!-- User Journey -->
+        <div id="journey" class="diagram-container">
+            <h2>Complete User Journey</h2>
+            <p>The end-to-end flow from initial setup through active monitoring and AI analysis.</p>
+            <div class="mermaid">
+flowchart TD
+    START([User Opens App]) --> CONNECT{Connect<br/>Kite?}
+
+    CONNECT -->|Yes| OAUTH[Complete Kite<br/>OAuth Flow]
+    CONNECT -->|No| MANUAL[Manual Instrument<br/>Entry]
+
+    OAUTH --> IMPORT[Import Watchlist]
+    IMPORT --> INSTRUMENTS[Instruments Created]
+    MANUAL --> INSTRUMENTS
+
+    INSTRUMENTS --> SILOS[Create Silos<br/>Group by Timeframe]
+    SILOS --> CHARTS[Add Charts<br/>to Each Silo]
+    CHARTS --> WEBHOOKS[Configure TradingView<br/>Webhooks]
+    WEBHOOKS --> LIVE[System Goes Live]
+
+    LIVE --> SIGNAL[Signal Received]
+    SIGNAL --> PROCESS[Signal Processed]
+    PROCESS --> EXPOSURE{Exposure<br/>Check}
+
+    EXPOSURE -->|Contradiction| ALERT[Contradiction Alert]
+    EXPOSURE -->|Confirmation| CONFIRM[Confirmation Indicator]
+    EXPOSURE -->|Isolated| STORE[Signal Stored]
+
+    ALERT --> DASH[View Dashboard]
+    CONFIRM --> DASH
+    STORE --> DASH
+
+    DASH --> NARRATIVE{Request AI<br/>Narrative?}
+    NARRATIVE -->|Yes| GENERATE[Generate Narrative<br/>with Disclaimer]
+    NARRATIVE -->|No| LIVE
+
+    GENERATE --> READ[Read Analysis]
+    READ --> DECIDE[User Makes<br/>Own Decision]
+    DECIDE --> LIVE
+
+    style START fill:#e3f2fd
+    style ALERT fill:#ffcdd2
+    style CONFIRM fill:#c8e6c9
+    style GENERATE fill:#fff9c4
+    style DECIDE fill:#e8f5e9
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>CIA-SIE v1.0 - Chart Intelligence Auditor & Signal Intelligence Engine</p>
+    </footer>
+
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'default',
+            securityLevel: 'loose',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+
+        function showDiagram(id) {
+            // Hide all diagrams
+            document.querySelectorAll('.diagram-container').forEach(el => {
+                el.classList.remove('active');
+            });
+            // Remove active from all buttons
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            // Show selected diagram
+            document.getElementById(id).classList.add('active');
+            // Mark button as active
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

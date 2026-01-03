@@ -1,0 +1,24 @@
+# CIA-SIE Gold Standard Audit - Scope Exclusions
+# Version: 1.0.0
+# Date: 02 January 2026
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# OUT OF SCOPE: Version Control Internals
+# ═══════════════════════════════════════════════════════════════════════════════
+
+.git/
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# ALL OTHER PATHS ARE IN-SCOPE
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# The following have FULL READ/WRITE access:
+# - src/cia_sie/           Backend application
+# - frontend/              Frontend application
+# - tests/                 Test suites
+# - specifications/        Design specifications
+# - AI_HANDOFF/        Handoff documentation
+# - .github/workflows/     CI/CD pipelines
+# - alembic/               Database migrations
+#
+# ═══════════════════════════════════════════════════════════════════════════════

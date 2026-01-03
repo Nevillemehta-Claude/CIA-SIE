@@ -1,0 +1,1647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIA-SIE | Chart Intelligence Auditor</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --neutral: #6b7280;
+            --bg-dark: #1f2937;
+            --bg-light: #f9fafb;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-light);
+            color: #111827;
+            line-height: 1.6;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--bg-dark);
+            color: white;
+            padding: 20px;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 30px;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-subtitle {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-section {
+            margin-bottom: 25px;
+        }
+
+        .nav-section-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            color: #9ca3af;
+            text-decoration: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            margin-top: 5px;
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* Constitutional Banner */
+        .constitutional-banner {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border: 2px solid #f59e0b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .constitutional-banner h3 {
+            color: #92400e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .principle {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .principle-number {
+            background: var(--warning);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .principle-text {
+            font-size: 14px;
+            color: #92400e;
+            font-weight: 500;
+        }
+
+        /* Grid */
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Instrument Card */
+        .instrument-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid var(--neutral);
+        }
+
+        .instrument-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .instrument-card.bullish {
+            border-left-color: var(--success);
+        }
+
+        .instrument-card.bearish {
+            border-left-color: var(--danger);
+        }
+
+        .instrument-card h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+
+        .instrument-card .subtitle {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        /* Direction Badge */
+        .direction {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .direction.bullish { color: var(--success); }
+        .direction.bearish { color: var(--danger); }
+        .direction.neutral { color: var(--neutral); }
+
+        /* Freshness Badge */
+        .freshness {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .freshness.current { background: var(--success); color: white; }
+        .freshness.recent { background: var(--warning); color: white; }
+        .freshness.stale { background: var(--danger); color: white; }
+        .freshness.unavailable { background: #374151; color: white; }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 1px solid var(--border);
+            color: #374151;
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-light);
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: var(--bg-light);
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6b7280;
+        }
+
+        tr:hover {
+            background: #fafafa;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-warning {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+
+        .alert-info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+        }
+
+        .alert-success {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+
+        /* AI Narrative */
+        .ai-narrative {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .ai-narrative h3 {
+            color: #0369a1;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-narrative p {
+            color: #0c4a6e;
+            line-height: 1.8;
+        }
+
+        .ai-disclaimer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #bae6fd;
+            font-size: 13px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        /* Platform Cards */
+        .platform-card {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .platform-card.connected {
+            border: 2px solid var(--success);
+        }
+
+        .platform-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .platform-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .platform-icon.tradingview { background: #d1fae5; }
+        .platform-icon.kite { background: #fef3c7; }
+
+        .platform-status {
+            margin-left: auto;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .platform-status.connected {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .platform-status.disconnected {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 15px;
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Silo Card */
+        .silo-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .silo-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .silo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .silo-name {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .silo-charts {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        /* Contradiction Alert */
+        .contradiction-alert {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .contradiction-alert strong {
+            color: #dc2626;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contradiction-alert p {
+            color: #7f1d1d;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        /* Hidden pages */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .principles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">CIA-SIE</div>
+            <div class="logo-subtitle">Chart Intelligence Auditor</div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Dashboard</div>
+                <div class="nav-item active" onclick="showPage('dashboard')">
+                    <span>📊</span> Command Center
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">Data</div>
+                <div class="nav-item" onclick="showPage('instruments')">
+                    <span>📈</span> Instruments
+                </div>
+                <div class="nav-item" onclick="showPage('baskets')">
+                    <span>📁</span> Baskets
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-section-title">System</div>
+                <div class="nav-item" onclick="showPage('platforms')">
+                    <span>🔗</span> Platforms
+                </div>
+                <div class="nav-item" onclick="showPage('settings')">
+                    <span>⚙️</span> Settings
+                </div>
+            </div>
+
+            <div class="nav-section" style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
+                <div class="nav-item" onclick="window.open('http://localhost:8000/docs', '_blank')">
+                    <span>📚</span> API Docs
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="page-dashboard" class="page active">
+                <div class="page-header">
+                    <h1>Command Center</h1>
+                    <p>Chart Intelligence Auditor & Signal Intelligence Engine</p>
+                </div>
+
+                <!-- Constitutional Banner -->
+                <div class="constitutional-banner">
+                    <h3>⚠️ Constitutional Principles</h3>
+                    <div class="principles-grid">
+                        <div class="principle">
+                            <span class="principle-number">1</span>
+                            <span class="principle-text">Decision-Support NOT Decision-Making</span>
+                        </div>
+                        <div class="principle">
+                            <span class="principle-number">2</span>
+                            <span class="principle-text">Expose Contradictions, NEVER Resolve Them</span>
+                        </div>
+                        <div class="principle">
+                            <span class="principle-number">3</span>
+                            <span class="principle-text">Descriptive AI, NOT Prescriptive AI</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Instruments</h3>
+                        <button class="btn btn-primary" onclick="openModal('add-instrument')">+ Add Instrument</button>
+                    </div>
+                    <div id="dashboard-instruments" class="grid-3">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instruments Page -->
+            <div id="page-instruments" class="page">
+                <div class="page-header">
+                    <h1>Instruments</h1>
+                    <p>Manage your trading instruments and their silos</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All Instruments</h3>
+                        <button class="btn btn-primary" onclick="openModal('add-instrument')">+ Add Instrument</button>
+                    </div>
+                    <div id="instruments-list">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Instrument Detail Page -->
+            <div id="page-instrument-detail" class="page">
+                <div class="breadcrumb">
+                    <a href="#" onclick="showPage('dashboard')">Command Center</a>
+                    <span>/</span>
+                    <span id="instrument-detail-symbol">Instrument</span>
+                </div>
+                <div class="page-header">
+                    <h1 id="instrument-detail-name">Instrument Name</h1>
+                    <p id="instrument-detail-subtitle">Loading...</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Silos</h3>
+                        <button class="btn btn-primary" onclick="openAddSiloModal()">+ Add Silo</button>
+                    </div>
+                    <div id="instrument-silos">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Silo Detail Page -->
+            <div id="page-silo-detail" class="page">
+                <div class="breadcrumb">
+                    <a href="#" onclick="showPage('dashboard')">Command Center</a>
+                    <span>/</span>
+                    <a href="#" id="silo-breadcrumb-instrument">Instrument</a>
+                    <span>/</span>
+                    <span id="silo-detail-name">Silo</span>
+                </div>
+                <div class="page-header">
+                    <h1 id="silo-detail-title">Silo Name</h1>
+                </div>
+
+                <!-- Contradiction Alert -->
+                <div id="contradiction-alert" class="contradiction-alert" style="display: none;">
+                    <strong>⚠️ Contradiction Detected</strong>
+                    <p id="contradiction-text">Conflicting signals detected between charts.</p>
+                </div>
+
+                <!-- Confirmation Alert -->
+                <div id="confirmation-alert" class="alert alert-success" style="display: none;">
+                    <span>✓</span>
+                    <div>
+                        <strong>Confirmation</strong>
+                        <p id="confirmation-text">Multiple charts agree on direction.</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Charts</h3>
+                        <button class="btn btn-primary" onclick="openAddChartModal()">+ Add Chart</button>
+                    </div>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Chart</th>
+                                    <th>Timeframe</th>
+                                    <th>Direction</th>
+                                    <th>Freshness</th>
+                                    <th>Last Signal</th>
+                                </tr>
+                            </thead>
+                            <tbody id="silo-charts-table">
+                                <tr><td colspan="5" class="loading"><div class="spinner"></div></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- AI Narrative -->
+                <div class="ai-narrative">
+                    <h3>📝 AI Narrative (Descriptive Only)</h3>
+                    <p id="ai-narrative-text">Loading narrative...</p>
+                    <p class="ai-disclaimer">
+                        This is a description of what your charts are showing.
+                        The interpretation and any decision is entirely yours.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Platforms Page -->
+            <div id="page-platforms" class="page">
+                <div class="page-header">
+                    <h1>Platform Integration</h1>
+                    <p>Connect to trading platforms to import instruments and receive signals</p>
+                </div>
+
+                <div class="grid-3">
+                    <!-- TradingView -->
+                    <div class="platform-card connected">
+                        <div class="platform-header">
+                            <div class="platform-icon tradingview">📡</div>
+                            <div>
+                                <div style="font-weight: 600;">TradingView Charts</div>
+                                <div style="font-size: 13px; color: #6b7280;">Webhook-based integration</div>
+                            </div>
+                            <span class="platform-status connected">Active</span>
+                        </div>
+                        <p style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">
+                            Receive signals via webhooks from TradingView alerts.
+                        </p>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            <span style="background: #d1fae5; color: #065f46; padding: 3px 8px; border-radius: 4px; font-size: 11px;">Real-time Signals</span>
+                            <span style="background: #fef3c7; color: #92400e; padding: 3px 8px; border-radius: 4px; font-size: 11px;">Manual Setup</span>
+                        </div>
+                    </div>
+
+                    <!-- Kite -->
+                    <div class="platform-card" id="kite-platform-card">
+                        <div class="platform-header">
+                            <div class="platform-icon kite">📈</div>
+                            <div>
+                                <div style="font-weight: 600;">Zerodha Kite</div>
+                                <div style="font-size: 13px; color: #6b7280;">API-based integration</div>
+                            </div>
+                            <span class="platform-status disconnected" id="kite-status">Not Connected</span>
+                        </div>
+                        <p style="font-size: 14px; color: #6b7280; margin-bottom: 15px;">
+                            Import watchlists from your Kite account.
+                        </p>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 15px;">
+                            <span style="background: #dbeafe; color: #1d4ed8; padding: 3px 8px; border-radius: 4px; font-size: 11px;">Watchlist Import</span>
+                            <span style="background: #fecaca; color: #dc2626; padding: 3px 8px; border-radius: 4px; font-size: 11px;">OAuth Required</span>
+                        </div>
+                        <button class="btn btn-primary" onclick="connectKite()">Connect to Kite</button>
+                    </div>
+                </div>
+
+                <!-- TradingView Setup Instructions -->
+                <div class="card" style="margin-top: 20px;">
+                    <h3 class="card-title" style="margin-bottom: 20px;">TradingView Webhook Setup</h3>
+
+                    <div class="form-group">
+                        <label>Webhook URL Template</label>
+                        <div class="code-block" id="webhook-url-template">http://localhost:8000/api/v1/webhook/{webhook_id}</div>
+                        <button class="btn btn-outline" style="margin-top: 10px;" onclick="copyToClipboard('webhook-url-template')">📋 Copy URL</button>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Alert Message Template (JSON)</label>
+                        <div class="code-block">{
+  "webhook_id": "YOUR_CHART_WEBHOOK_ID",
+  "direction": "{{strategy.order.action}}",
+  "signal_type": "STATE_CHANGE",
+  "rsi": {{plot("RSI")}},
+  "macd": {{plot("MACD")}}
+}</div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <span>💡</span>
+                        <div>
+                            <strong>How it works:</strong> Create a chart in CIA-SIE first to get a webhook_id, then use that ID in your TradingView alert webhook URL.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Baskets Page -->
+            <div id="page-baskets" class="page">
+                <div class="page-header">
+                    <h1>Analytical Baskets</h1>
+                    <p>Organize charts into logical groups for analysis</p>
+                </div>
+
+                <div class="alert alert-info">
+                    <span>ℹ️</span>
+                    <div>
+                        <strong>Note:</strong> Baskets are UI-layer organizational tools only.
+                        They do NOT affect signal processing, weighting, or analysis.
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">All Baskets</h3>
+                        <button class="btn btn-primary" onclick="openModal('add-basket')">+ Create Basket</button>
+                    </div>
+                    <div id="baskets-list" class="grid-3">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div id="page-settings" class="page">
+                <div class="page-header">
+                    <h1>Settings</h1>
+                    <p>Configure application settings</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title" style="margin-bottom: 20px;">Freshness Thresholds (Default)</h3>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label>Current Threshold (minutes)</label>
+                            <input type="number" value="2" id="setting-current-threshold">
+                        </div>
+                        <div class="form-group">
+                            <label>Recent Threshold (minutes)</label>
+                            <input type="number" value="10" id="setting-recent-threshold">
+                        </div>
+                        <div class="form-group">
+                            <label>Stale Threshold (minutes)</label>
+                            <input type="number" value="30" id="setting-stale-threshold">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title" style="margin-bottom: 20px;">API Status</h3>
+                    <div id="api-status">
+                        <div class="loading"><div class="spinner"></div></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add Instrument Modal -->
+    <div class="modal-overlay" id="modal-add-instrument">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add Instrument</h2>
+                <button class="modal-close" onclick="closeModal('add-instrument')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Symbol *</label>
+                    <input type="text" id="instrument-symbol" placeholder="e.g., NIFTY50, GOLDBEES">
+                </div>
+                <div class="form-group">
+                    <label>Display Name *</label>
+                    <input type="text" id="instrument-display-name" placeholder="e.g., Nifty 50 Index">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('add-instrument')">Cancel</button>
+                <button class="btn btn-primary" onclick="createInstrument()">Create Instrument</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Silo Modal -->
+    <div class="modal-overlay" id="modal-add-silo">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add Silo</h2>
+                <button class="modal-close" onclick="closeModal('add-silo')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Silo Name *</label>
+                    <input type="text" id="silo-name" placeholder="e.g., Daily Analysis, Weekly Signals">
+                </div>
+                <div class="form-group">
+                    <label>Heartbeat Frequency (minutes)</label>
+                    <input type="number" id="silo-heartbeat" value="5">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('add-silo')">Cancel</button>
+                <button class="btn btn-primary" onclick="createSilo()">Create Silo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Chart Modal -->
+    <div class="modal-overlay" id="modal-add-chart">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Add Chart</h2>
+                <button class="modal-close" onclick="closeModal('add-chart')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Chart Code *</label>
+                    <input type="text" id="chart-code" placeholder="e.g., 01A, RSI_D">
+                </div>
+                <div class="form-group">
+                    <label>Chart Name *</label>
+                    <input type="text" id="chart-name" placeholder="e.g., Primary Signal, RSI Divergence">
+                </div>
+                <div class="form-group">
+                    <label>Timeframe *</label>
+                    <select id="chart-timeframe">
+                        <option value="1m">1 Minute</option>
+                        <option value="5m">5 Minutes</option>
+                        <option value="15m">15 Minutes</option>
+                        <option value="30m">30 Minutes</option>
+                        <option value="1h">1 Hour</option>
+                        <option value="4h">4 Hours</option>
+                        <option value="D" selected>Daily</option>
+                        <option value="W">Weekly</option>
+                        <option value="M">Monthly</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Webhook ID *</label>
+                    <input type="text" id="chart-webhook-id" placeholder="e.g., NIFTY_01A_D">
+                    <small style="color: #6b7280;">Use this ID in your TradingView webhook URL</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('add-chart')">Cancel</button>
+                <button class="btn btn-primary" onclick="createChart()">Create Chart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Basket Modal -->
+    <div class="modal-overlay" id="modal-add-basket">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Create Basket</h2>
+                <button class="modal-close" onclick="closeModal('add-basket')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Basket Name *</label>
+                    <input type="text" id="basket-name" placeholder="e.g., Momentum Indicators">
+                </div>
+                <div class="form-group">
+                    <label>Basket Type *</label>
+                    <select id="basket-type">
+                        <option value="LOGICAL">Logical</option>
+                        <option value="HIERARCHICAL">Hierarchical</option>
+                        <option value="CONTEXTUAL">Contextual</option>
+                        <option value="CUSTOM">Custom</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="basket-description" rows="3" placeholder="Optional description..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('add-basket')">Cancel</button>
+                <button class="btn btn-primary" onclick="createBasket()">Create Basket</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+        let currentInstrumentId = null;
+        let currentSiloId = null;
+        let currentInstrument = null;
+
+        // Page Navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            document.getElementById('page-' + pageId).classList.add('active');
+            event?.target?.classList.add('active');
+
+            // Load data for the page
+            switch(pageId) {
+                case 'dashboard':
+                    loadInstruments();
+                    break;
+                case 'instruments':
+                    loadInstrumentsList();
+                    break;
+                case 'platforms':
+                    checkKiteStatus();
+                    break;
+                case 'baskets':
+                    loadBaskets();
+                    break;
+                case 'settings':
+                    checkApiStatus();
+                    break;
+            }
+        }
+
+        // Modal Functions
+        function openModal(modalId) {
+            document.getElementById('modal-' + modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById('modal-' + modalId).classList.remove('active');
+        }
+
+        // API Calls
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            const options = {
+                method,
+                headers: { 'Content-Type': 'application/json' }
+            };
+            if (body) options.body = JSON.stringify(body);
+
+            const response = await fetch(API_BASE + endpoint, options);
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'API Error');
+            }
+            return response.json();
+        }
+
+        // Load Instruments
+        async function loadInstruments() {
+            try {
+                const instruments = await apiCall('/instruments/');
+                const container = document.getElementById('dashboard-instruments');
+
+                if (instruments.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <div class="empty-state-icon">📊</div>
+                            <h3>No Instruments Yet</h3>
+                            <p>Add your first instrument to get started</p>
+                            <button class="btn btn-primary" style="margin-top: 15px;" onclick="openModal('add-instrument')">+ Add Instrument</button>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = instruments.map(inst => `
+                    <div class="instrument-card ${inst.latest_direction?.toLowerCase() || ''}" onclick="showInstrumentDetail('${inst.instrument_id}')">
+                        <h4>${inst.symbol}</h4>
+                        <p class="subtitle">${inst.display_name}</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="direction ${inst.latest_direction?.toLowerCase() || 'neutral'}">
+                                ● ${inst.latest_direction || 'NO SIGNAL'}
+                            </span>
+                            <span class="freshness ${inst.freshness?.toLowerCase() || 'unavailable'}">
+                                ${inst.freshness || 'UNAVAILABLE'}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading instruments:', error);
+                document.getElementById('dashboard-instruments').innerHTML = `
+                    <div class="alert alert-warning" style="grid-column: 1/-1;">
+                        <span>⚠️</span>
+                        <div>Failed to load instruments: ${error.message}</div>
+                    </div>
+                `;
+            }
+        }
+
+        // Load Instruments List (table view)
+        async function loadInstrumentsList() {
+            try {
+                const instruments = await apiCall('/instruments/');
+                const container = document.getElementById('instruments-list');
+
+                if (instruments.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📊</div>
+                            <h3>No Instruments Yet</h3>
+                            <p>Add your first instrument to get started</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Symbol</th>
+                                    <th>Display Name</th>
+                                    <th>Silos</th>
+                                    <th>Direction</th>
+                                    <th>Created</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${instruments.map(inst => `
+                                    <tr onclick="showInstrumentDetail('${inst.instrument_id}')" style="cursor: pointer;">
+                                        <td><strong>${inst.symbol}</strong></td>
+                                        <td>${inst.display_name}</td>
+                                        <td>${inst.silo_count || 0} silos</td>
+                                        <td>
+                                            <span class="direction ${inst.latest_direction?.toLowerCase() || 'neutral'}">
+                                                ● ${inst.latest_direction || 'N/A'}
+                                            </span>
+                                        </td>
+                                        <td>${new Date(inst.created_at).toLocaleDateString()}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Error loading instruments:', error);
+            }
+        }
+
+        // Create Instrument
+        async function createInstrument() {
+            const symbol = document.getElementById('instrument-symbol').value.trim().toUpperCase();
+            const displayName = document.getElementById('instrument-display-name').value.trim();
+
+            if (!symbol || !displayName) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            try {
+                await apiCall('/instruments/', 'POST', { symbol, display_name: displayName });
+                closeModal('add-instrument');
+                document.getElementById('instrument-symbol').value = '';
+                document.getElementById('instrument-display-name').value = '';
+                loadInstruments();
+            } catch (error) {
+                alert('Error creating instrument: ' + error.message);
+            }
+        }
+
+        // Show Instrument Detail
+        async function showInstrumentDetail(instrumentId) {
+            currentInstrumentId = instrumentId;
+
+            try {
+                const instrument = await apiCall('/instruments/' + instrumentId);
+                currentInstrument = instrument;
+
+                document.getElementById('instrument-detail-symbol').textContent = instrument.symbol;
+                document.getElementById('instrument-detail-name').textContent = instrument.symbol;
+                document.getElementById('instrument-detail-subtitle').textContent = instrument.display_name;
+
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById('page-instrument-detail').classList.add('active');
+
+                loadInstrumentSilos(instrumentId);
+            } catch (error) {
+                alert('Error loading instrument: ' + error.message);
+            }
+        }
+
+        // Load Instrument Silos
+        async function loadInstrumentSilos(instrumentId) {
+            try {
+                const silos = await apiCall('/silos/?instrument_id=' + instrumentId);
+                const container = document.getElementById('instrument-silos');
+
+                if (silos.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📁</div>
+                            <h3>No Silos Yet</h3>
+                            <p>Create a silo to organize your charts</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = silos.map(silo => `
+                    <div class="silo-card" onclick="showSiloDetail('${silo.silo_id}')">
+                        <div class="silo-header">
+                            <div>
+                                <div class="silo-name">${silo.silo_name}</div>
+                                <div class="silo-charts">${silo.chart_count || 0} charts configured</div>
+                            </div>
+                            <span class="direction ${silo.latest_direction?.toLowerCase() || 'neutral'}">
+                                ● ${silo.latest_direction || 'N/A'}
+                            </span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading silos:', error);
+            }
+        }
+
+        // Open Add Silo Modal
+        function openAddSiloModal() {
+            openModal('add-silo');
+        }
+
+        // Create Silo
+        async function createSilo() {
+            const siloName = document.getElementById('silo-name').value.trim();
+            const heartbeatFreq = parseInt(document.getElementById('silo-heartbeat').value);
+
+            if (!siloName) {
+                alert('Please enter a silo name');
+                return;
+            }
+
+            try {
+                await apiCall('/silos/', 'POST', {
+                    instrument_id: currentInstrumentId,
+                    silo_name: siloName,
+                    heartbeat_frequency_min: heartbeatFreq
+                });
+                closeModal('add-silo');
+                document.getElementById('silo-name').value = '';
+                loadInstrumentSilos(currentInstrumentId);
+            } catch (error) {
+                alert('Error creating silo: ' + error.message);
+            }
+        }
+
+        // Show Silo Detail
+        async function showSiloDetail(siloId) {
+            currentSiloId = siloId;
+
+            try {
+                const silo = await apiCall('/silos/' + siloId);
+
+                document.getElementById('silo-detail-name').textContent = silo.silo_name;
+                document.getElementById('silo-detail-title').textContent = silo.silo_name;
+                document.getElementById('silo-breadcrumb-instrument').textContent = currentInstrument?.symbol || 'Instrument';
+                document.getElementById('silo-breadcrumb-instrument').onclick = () => showInstrumentDetail(currentInstrumentId);
+
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById('page-silo-detail').classList.add('active');
+
+                loadSiloCharts(siloId);
+                loadSiloRelationships(siloId);
+                loadSiloNarrative(siloId);
+            } catch (error) {
+                alert('Error loading silo: ' + error.message);
+            }
+        }
+
+        // Load Silo Charts
+        async function loadSiloCharts(siloId) {
+            try {
+                const charts = await apiCall('/charts/?silo_id=' + siloId);
+                const tbody = document.getElementById('silo-charts-table');
+
+                if (charts.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 40px;">
+                                No charts configured. Add a chart to receive signals.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                tbody.innerHTML = charts.map(chart => `
+                    <tr>
+                        <td><strong>${chart.chart_name}</strong><br><small style="color: #6b7280;">${chart.chart_code}</small></td>
+                        <td>${chart.timeframe}</td>
+                        <td>
+                            <span class="direction ${chart.latest_signal?.direction?.toLowerCase() || 'neutral'}">
+                                ● ${chart.latest_signal?.direction || 'NO SIGNAL'}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="freshness ${chart.freshness?.toLowerCase() || 'unavailable'}">
+                                ${chart.freshness || 'UNAVAILABLE'}
+                            </span>
+                        </td>
+                        <td>${chart.latest_signal ? formatTimeAgo(chart.latest_signal.received_at) : 'Never'}</td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading charts:', error);
+            }
+        }
+
+        // Load Silo Relationships (contradictions/confirmations)
+        async function loadSiloRelationships(siloId) {
+            try {
+                const relationships = await apiCall('/relationships/silo/' + siloId);
+
+                const contradictionAlert = document.getElementById('contradiction-alert');
+                const confirmationAlert = document.getElementById('confirmation-alert');
+
+                if (relationships.contradictions && relationships.contradictions.length > 0) {
+                    contradictionAlert.style.display = 'block';
+                    const c = relationships.contradictions[0];
+                    document.getElementById('contradiction-text').textContent =
+                        `Chart "${c.chart1_name}" (${c.chart1_direction}) contradicts Chart "${c.chart2_name}" (${c.chart2_direction}). User judgment required.`;
+                } else {
+                    contradictionAlert.style.display = 'none';
+                }
+
+                if (relationships.confirmations && relationships.confirmations.length > 0) {
+                    confirmationAlert.style.display = 'block';
+                    const conf = relationships.confirmations[0];
+                    document.getElementById('confirmation-text').textContent =
+                        `${conf.chart_count} charts confirm ${conf.direction} direction.`;
+                } else {
+                    confirmationAlert.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error loading relationships:', error);
+            }
+        }
+
+        // Load Silo Narrative
+        async function loadSiloNarrative(siloId) {
+            try {
+                const narrative = await apiCall('/narratives/silo/' + siloId);
+                document.getElementById('ai-narrative-text').textContent = narrative.narrative || 'No narrative available. Add charts and receive signals to generate a narrative.';
+            } catch (error) {
+                document.getElementById('ai-narrative-text').textContent = 'Unable to generate narrative. Ensure charts have signals and AI is configured.';
+            }
+        }
+
+        // Open Add Chart Modal
+        function openAddChartModal() {
+            openModal('add-chart');
+        }
+
+        // Create Chart
+        async function createChart() {
+            const chartCode = document.getElementById('chart-code').value.trim();
+            const chartName = document.getElementById('chart-name').value.trim();
+            const timeframe = document.getElementById('chart-timeframe').value;
+            const webhookId = document.getElementById('chart-webhook-id').value.trim();
+
+            if (!chartCode || !chartName || !webhookId) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            try {
+                await apiCall('/charts/', 'POST', {
+                    silo_id: currentSiloId,
+                    chart_code: chartCode,
+                    chart_name: chartName,
+                    timeframe: timeframe,
+                    webhook_id: webhookId
+                });
+                closeModal('add-chart');
+                document.getElementById('chart-code').value = '';
+                document.getElementById('chart-name').value = '';
+                document.getElementById('chart-webhook-id').value = '';
+                loadSiloCharts(currentSiloId);
+            } catch (error) {
+                alert('Error creating chart: ' + error.message);
+            }
+        }
+
+        // Load Baskets
+        async function loadBaskets() {
+            try {
+                const baskets = await apiCall('/baskets/');
+                const container = document.getElementById('baskets-list');
+
+                if (baskets.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <div class="empty-state-icon">📁</div>
+                            <h3>No Baskets Yet</h3>
+                            <p>Create a basket to organize your charts</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = baskets.map(basket => `
+                    <div class="instrument-card">
+                        <h4>${basket.basket_name}</h4>
+                        <p class="subtitle">Type: ${basket.basket_type}</p>
+                        <p style="font-size: 14px; color: #6b7280;">${basket.chart_count || 0} charts in basket</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading baskets:', error);
+            }
+        }
+
+        // Create Basket
+        async function createBasket() {
+            const basketName = document.getElementById('basket-name').value.trim();
+            const basketType = document.getElementById('basket-type').value;
+            const description = document.getElementById('basket-description').value.trim();
+
+            if (!basketName) {
+                alert('Please enter a basket name');
+                return;
+            }
+
+            try {
+                await apiCall('/baskets/', 'POST', {
+                    basket_name: basketName,
+                    basket_type: basketType,
+                    description: description || null
+                });
+                closeModal('add-basket');
+                document.getElementById('basket-name').value = '';
+                document.getElementById('basket-description').value = '';
+                loadBaskets();
+            } catch (error) {
+                alert('Error creating basket: ' + error.message);
+            }
+        }
+
+        // Kite Integration
+        async function checkKiteStatus() {
+            try {
+                const status = await apiCall('/platforms/kite/status');
+                const statusEl = document.getElementById('kite-status');
+                const cardEl = document.getElementById('kite-platform-card');
+
+                if (status.connected) {
+                    statusEl.textContent = 'Connected';
+                    statusEl.className = 'platform-status connected';
+                    cardEl.classList.add('connected');
+                } else {
+                    statusEl.textContent = 'Not Connected';
+                    statusEl.className = 'platform-status disconnected';
+                    cardEl.classList.remove('connected');
+                }
+            } catch (error) {
+                console.error('Error checking Kite status:', error);
+            }
+        }
+
+        function connectKite() {
+            window.location.href = 'http://localhost:8000/api/v1/platforms/kite/login';
+        }
+
+        // Check API Status
+        async function checkApiStatus() {
+            try {
+                const health = await fetch('http://localhost:8000/health').then(r => r.json());
+                document.getElementById('api-status').innerHTML = `
+                    <div class="alert alert-success">
+                        <span>✓</span>
+                        <div>
+                            <strong>API is running</strong>
+                            <p>Status: ${health.status} | Version: ${health.version || 'N/A'}</p>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                document.getElementById('api-status').innerHTML = `
+                    <div class="alert alert-warning">
+                        <span>⚠️</span>
+                        <div>
+                            <strong>API not reachable</strong>
+                            <p>Make sure the backend is running on http://localhost:8000</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Utility Functions
+        function formatTimeAgo(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return diffMins + ' min ago';
+            if (diffMins < 1440) return Math.floor(diffMins / 60) + ' hours ago';
+            return Math.floor(diffMins / 1440) + ' days ago';
+        }
+
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied to clipboard!');
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadInstruments();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CIA-SIE Complete Application Flowchart</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --purple: #8b5cf6;
+            --cyan: #06b6d4;
+            --pink: #ec4899;
+            --bg-dark: #1f2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 18px;
+        }
+
+        .section {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        /* Flow Container */
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .flow-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Flow Boxes */
+        .flow-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-radius: 16px;
+            padding: 20px 30px;
+            min-width: 200px;
+            text-align: center;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .flow-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .flow-box.external {
+            border-color: var(--cyan);
+            background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(6, 182, 212, 0.05));
+        }
+
+        .flow-box.backend {
+            border-color: var(--success);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05));
+        }
+
+        .flow-box.database {
+            border-color: var(--purple);
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.05));
+        }
+
+        .flow-box.frontend {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(37, 99, 235, 0.05));
+        }
+
+        .flow-box.ai {
+            border-color: var(--pink);
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.2), rgba(236, 72, 153, 0.05));
+        }
+
+        .flow-box.constitutional {
+            border-color: var(--warning);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));
+        }
+
+        .flow-box.user {
+            border-color: #64748b;
+            background: linear-gradient(135deg, rgba(100, 116, 139, 0.2), rgba(100, 116, 139, 0.05));
+        }
+
+        .flow-box h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .flow-box p {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        .flow-box .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: var(--warning);
+            color: #000;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        /* Arrows */
+        .arrow {
+            font-size: 30px;
+            color: #475569;
+        }
+
+        .arrow.down {
+            transform: rotate(90deg);
+        }
+
+        .arrow-label {
+            font-size: 12px;
+            color: #64748b;
+            text-align: center;
+            padding: 5px 10px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+        }
+
+        /* Vertical Flow */
+        .vertical-flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Horizontal Group */
+        .horizontal-group {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+        }
+
+        /* Legend */
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            border: 2px solid;
+        }
+
+        /* Data Table */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .data-table th {
+            background: rgba(0,0,0,0.3);
+            font-weight: 600;
+            color: #94a3b8;
+        }
+
+        .data-table tr:hover {
+            background: rgba(255,255,255,0.05);
+        }
+
+        /* Code Block */
+        .code-block {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Monaco', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 20px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .code-block .comment { color: #64748b; }
+        .code-block .key { color: #60a5fa; }
+        .code-block .string { color: #34d399; }
+        .code-block .number { color: #fbbf24; }
+
+        /* Hierarchy */
+        .hierarchy {
+            padding-left: 30px;
+            border-left: 2px solid rgba(255,255,255,0.2);
+            margin-left: 20px;
+        }
+
+        .hierarchy-item {
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .hierarchy-item::before {
+            content: '';
+            position: absolute;
+            left: -32px;
+            top: 50%;
+            width: 30px;
+            height: 2px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        .hierarchy-item h5 {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .hierarchy-item p {
+            font-size: 13px;
+            color: #94a3b8;
+        }
+
+        /* Constitutional Rule */
+        .constitutional-rule {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.05));
+            border: 2px solid var(--warning);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .constitutional-rule h5 {
+            color: var(--warning);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 8px;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .tab:hover, .tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Process Step */
+        .process-step {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            padding: 20px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .step-content h5 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .step-content p {
+            color: #94a3b8;
+            font-size: 14px;
+        }
+
+        /* Alert Box */
+        .alert-box {
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .alert-box.info {
+            background: rgba(37, 99, 235, 0.2);
+            border: 1px solid var(--primary);
+        }
+
+        .alert-box.warning {
+            background: rgba(245, 158, 11, 0.2);
+            border: 1px solid var(--warning);
+        }
+
+        /* Mega Flow Diagram */
+        .mega-flow {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 40px;
+            overflow-x: auto;
+        }
+
+        .flow-diagram {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            min-width: 1000px;
+        }
+
+        .flow-layer {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .flow-layer-label {
+            width: 120px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            flex-shrink: 0;
+        }
+
+        .flow-layer-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+        }
+
+        .connector-line {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #475569, transparent);
+            flex: 1;
+            min-width: 30px;
+        }
+
+        .connector-vertical {
+            width: 2px;
+            height: 30px;
+            background: #475569;
+            margin: 0 auto;
+        }
+
+        /* Entity Relationship */
+        .er-diagram {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+
+        .er-entity {
+            background: rgba(139, 92, 246, 0.2);
+            border: 2px solid var(--purple);
+            border-radius: 12px;
+            padding: 20px;
+            min-width: 200px;
+        }
+
+        .er-entity h5 {
+            background: var(--purple);
+            margin: -20px -20px 15px -20px;
+            padding: 12px 20px;
+            border-radius: 10px 10px 0 0;
+            font-size: 14px;
+        }
+
+        .er-entity ul {
+            list-style: none;
+            font-size: 13px;
+        }
+
+        .er-entity li {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .er-entity li:last-child {
+            border-bottom: none;
+        }
+
+        .er-entity .pk {
+            color: var(--warning);
+        }
+
+        .er-entity .fk {
+            color: var(--cyan);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>CIA-SIE Complete Application Architecture</h1>
+        <p>Chart Intelligence Auditor & Signal Intelligence Engine — End-to-End Flow</p>
+    </div>
+
+    <!-- Legend -->
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-color" style="border-color: var(--cyan); background: rgba(6, 182, 212, 0.3);"></div>
+            <span>External Systems</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="border-color: var(--success); background: rgba(16, 185, 129, 0.3);"></div>
+            <span>Backend API</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="border-color: var(--purple); background: rgba(139, 92, 246, 0.3);"></div>
+            <span>Database</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="border-color: var(--primary); background: rgba(37, 99, 235, 0.3);"></div>
+            <span>Frontend UI</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="border-color: var(--pink); background: rgba(236, 72, 153, 0.3);"></div>
+            <span>AI Services</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-color" style="border-color: var(--warning); background: rgba(245, 158, 11, 0.3);"></div>
+            <span>Constitutional Rules</span>
+        </div>
+    </div>
+
+    <!-- Section 1: High-Level Architecture -->
+    <div class="section">
+        <h2 class="section-title">
+            <span class="icon" style="background: var(--primary);">🏗️</span>
+            1. High-Level System Architecture
+        </h2>
+
+        <div class="mega-flow">
+            <div class="flow-diagram">
+                <!-- Layer 1: External -->
+                <div class="flow-layer">
+                    <div class="flow-layer-label">External</div>
+                    <div class="flow-layer-content">
+                        <div class="flow-box external">
+                            <h4>📊 TradingView</h4>
+                            <p>Charts & Alerts</p>
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flow-box external">
+                            <h4>📈 Zerodha Kite</h4>
+                            <p>Watchlists & Data</p>
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flow-box user">
+                            <h4>👤 User</h4>
+                            <p>Decision Maker</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="connector-vertical"></div>
+
+                <!-- Layer 2: API Gateway -->
+                <div class="flow-layer">
+                    <div class="flow-layer-label">API Layer</div>
+                    <div class="flow-layer-content">
+                        <div class="flow-box backend">
+                            <h4>🔗 Webhook Endpoint</h4>
+                            <p>/api/v1/webhook/</p>
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flow-box backend">
+                            <h4>🔐 OAuth Handler</h4>
+                            <p>/api/v1/platforms/</p>
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flow-box backend">
+                            <h4>📡 REST API</h4>
+                            <p>FastAPI Routes</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="connector-vertical"></div>
+
+                <!-- Layer 3: Business Logic -->
+                <div class="flow-layer">
+                    <div class="flow-layer-label">Business Logic</div>
+                    <div class="flow-layer-content">
+                        <div class="flow-box backend">
+                            <h4>📥 Signal Ingestion</h4>
+                            <p>Webhook Processing</p>
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flow-box backend">
+                            <h4>⚡ Exposure Engine</h4>
+                            <p>Contradiction Detection</p>
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flow-box ai">
+                            <h4>🤖 Claude AI</h4>
+                            <p>Narrative Generation</p>
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flow-box constitutional">
+                            <span class="badge">ENFORCED</span>
+                            <h4>⚖️ Constitutional Guard</h4>
+                            <p>3 Inviolable Rules</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="connector-vertical"></div>
+
+                <!-- Layer 4: Data -->
+                <div class="flow-layer">
+                    <div class="flow-layer-label">Data Layer</div>
+                    <div class="flow-layer-content">
+                        <div class="flow-box database">
+                            <h4>🗄️ SQLite Database</h4>
+                            <p>Instruments, Silos, Charts, Signals</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="connector-vertical"></div>
+
+                <!-- Layer 5: Frontend -->
+                <div class="flow-layer">
+                    <div class="flow-layer-label">Presentation</div>
+                    <div class="flow-layer-content">
+                        <div class="flow-box frontend">
+                            <h4>🖥️ Command Center</h4>
+                            <p>Dashboard UI</p>
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flow-box frontend">
+                            <h4>📋 Signal Display</h4>
+                            <p>Charts & Status</p>
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flow-box frontend">
+                            <h4>⚠️ Contradiction View</h4>
+                            <p>Equal Weight Display</p>
+                        </div>
+                        <div class="connector-line"></div>
+                        <div class="flow-box frontend">
+                            <h4>📝 Narrative Panel</h4>
+                            <p>AI Description + Disclaimer</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 2: Data Hierarchy -->
+    <div class="section">
+        <h2 class="section-title">
+            <span class="icon" style="background: var(--purple);">📊</span>
+            2. Data Hierarchy (Entity Relationships)
+        </h2>
+
+        <div class="er-diagram">
+            <div class="er-entity">
+                <h5>📦 INSTRUMENT</h5>
+                <ul>
+                    <li><span class="pk">🔑 instrument_id</span></li>
+                    <li>symbol (unique)</li>
+                    <li>display_name</li>
+                    <li>created_at</li>
+                    <li>is_active</li>
+                </ul>
+            </div>
+
+            <div style="display: flex; align-items: center; font-size: 24px; color: #475569;">→ has many →</div>
+
+            <div class="er-entity">
+                <h5>📁 SILO</h5>
+                <ul>
+                    <li><span class="pk">🔑 silo_id</span></li>
+                    <li><span class="fk">🔗 instrument_id</span></li>
+                    <li>silo_name</li>
+                    <li>heartbeat_frequency_min</li>
+                    <li>current_threshold_min</li>
+                    <li>recent_threshold_min</li>
+                    <li>stale_threshold_min</li>
+                </ul>
+            </div>
+
+            <div style="display: flex; align-items: center; font-size: 24px; color: #475569;">→ has many →</div>
+
+            <div class="er-entity">
+                <h5>📈 CHART</h5>
+                <ul>
+                    <li><span class="pk">🔑 chart_id</span></li>
+                    <li><span class="fk">🔗 silo_id</span></li>
+                    <li>chart_code</li>
+                    <li>chart_name</li>
+                    <li>timeframe</li>
+                    <li>webhook_id (unique)</li>
+                </ul>
+            </div>
+
+            <div style="display: flex; align-items: center; font-size: 24px; color: #475569;">→ has many →</div>
+
+            <div class="er-entity">
+                <h5>📡 SIGNAL</h5>
+                <ul>
+                    <li><span class="pk">🔑 signal_id</span></li>
+                    <li><span class="fk">🔗 chart_id</span></li>
+                    <li>received_at</li>
+                    <li>signal_type</li>
+                    <li>direction</li>
+                    <li>indicators (JSON)</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="alert-box info">
+            <strong>Example Hierarchy:</strong><br><br>
+            <code>GOLDBEES (Instrument) → Daily Analysis (Silo) → EMA Signal (Chart) → BULLISH @ 09:45 (Signal)</code>
+        </div>
+    </div>
+
+    <!-- Section 3: Signal Flow -->
+    <div class="section">
+        <h2 class="section-title">
+            <span class="icon" style="background: var(--success);">📡</span>
+            3. Signal Ingestion Flow (TradingView → CIA-SIE)
+        </h2>
+
+        <div class="process-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h5>TradingView Alert Triggers</h5>
+                <p>User's Pine Script indicator or strategy fires an alert based on chart conditions</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h5>Webhook POST Request</h5>
+                <p>TradingView sends HTTP POST to: <code>http://your-server:8000/api/v1/webhook/</code></p>
+                <div class="code-block">
+<span class="comment">// TradingView Alert Message (JSON)</span>
+{
+  <span class="key">"webhook_id"</span>: <span class="string">"GOLDBEES_01A_D"</span>,
+  <span class="key">"direction"</span>: <span class="string">"BULLISH"</span>,
+  <span class="key">"signal_type"</span>: <span class="string">"STATE_CHANGE"</span>,
+  <span class="key">"rsi"</span>: <span class="number">28.5</span>,
+  <span class="key">"macd"</span>: <span class="number">0.12</span>,
+  <span class="key">"ema_alignment"</span>: <span class="string">"BULLISH_STACK"</span>
+}
+                </div>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h5>Webhook Validation</h5>
+                <p>Backend validates: webhook_id exists, direction is valid enum, required fields present</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h5>Signal Storage</h5>
+                <p>Signal is stored in database with timestamp, linked to the chart via webhook_id</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+                <h5>Exposure Engine Triggered</h5>
+                <p>Contradiction/Confirmation detection runs for the silo containing this chart</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">6</div>
+            <div class="step-content">
+                <h5>Frontend Updates</h5>
+                <p>Next API call or refresh shows new signal with direction and freshness status</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section 4: Contradiction Detection -->
+    <div class="section">
+        <h2 class="section-title">
+            <span class="icon" style="background: var(--danger);">⚡</span>
+            4. Contradiction & Confirmation Detection
+        </h2>
+
+        <div class="horizontal-group" style="justify-content: center; margin-bottom: 30px;">
+            <div class="flow-box backend" style="min-width: 250px;">
+                <h4>📈 Chart A</h4>
+                <p>Latest Signal: <strong style="color: var(--success);">BULLISH</strong></p>
+            </div>
+            <div class="flow-box backend" style="min-width: 250px;">
+                <h4>📈 Chart B</h4>
+                <p>Latest Signal: <strong style="color: var(--danger);">BEARISH</strong></p>
+            </div>
+            <div class="flow-box backend" style="min-width: 250px;">
+                <h4>📈 Chart C</h4>
+                <p>Latest Signal: <strong style="color: var(--success);">BULLISH</strong></p>
+            </div>
+        </div>
+
+        <div class="flow-row">
+            <span class="arrow down">⬇️</span>
+        </div>
+
+        <div class="flow-row" style="margin-top: 20px;">
+            <div class="flow-box backend" style="min-width: 400px;">
+                <h4>⚡ Exposure Engine Analysis</h4>
+                <p>Compares all chart directions within the silo</p>
+            </div>
+        </div>
+
+        <div class="flow-row" style="margin-top: 20px;">
+            <span class="arrow down">⬇️</span>
+        </div>
+
+        <div class="horizontal-group" style="justify-content: center; margin-top: 20px; gap: 40px;">
+            <div class="flow-box" style="border-color: var(--danger); background: rgba(239, 68, 68, 0.2); min-width: 300px;">
+                <h4>⚠️ CONTRADICTION DETECTED</h4>
+                <p>Chart A (BULLISH) ≠ Chart B (BEARISH)</p>
+                <p style="margin-top: 10px; color: var(--warning);">Requires user judgment</p>
+            </div>
+            <div class="flow-box" style="border-color: var(--success); background: rgba(16, 185, 129, 0.2); min-width: 300px;">
+                <h4>✓ CONFIRMATION DETECTED</h4>
+                <p>Chart A (BULLISH) = Chart C (BULLISH)</p>
+                <p style="margin-top: 10px; color: var(--success);">2 charts agree</p>
+            </div>
+        </div>
+
+        <div class="constitutional-rule">
+            <h5>⚖️ Constitutional Rule #2</h5>
+            <p>Contradictions are EXPOSED, never resolved. Both conflicting signals are displayed with <strong>EQUAL visual weight</strong>. The system does NOT suggest which chart is "correct" or "more reliable".</p>
+        </div>
+    </div>
+
+    <!-- Section 5: AI Narrative -->
+    <div class="section">
+        <h2 class="section-title">
+            <span class="icon" style="background: var(--pink);">🤖</span>
+            5. AI Narrative Generation Flow
+        </h2>
+
+        <div class="flow-container">
+            <div class="flow-row">
+                <div class="flow-box frontend">
+                    <h4>👤 User Request</h4>
+                    <p>Views silo detail page</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="flow-box backend">
+                    <h4>📡 API Call</h4>
+                    <p>GET /narratives/silo/{id}</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="flow-box backend">
+                    <h4>📊 Data Assembly</h4>
+                    <p>Collect all chart signals</p>
+                </div>
+            </div>
+
+            <div class="flow-row">
+                <span class="arrow down">⬇️</span>
+            </div>
+
+            <div class="flow-row">
+                <div class="flow-box ai">
+                    <h4>🤖 Claude API</h4>
+                    <p>Generate descriptive narrative</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="flow-box constitutional">
+                    <span class="badge">FILTER</span>
+                    <h4>⚖️ Constitutional Guard</h4>
+                    <p>Remove any recommendations</p>
+                </div>
+                <span class="arrow">→</span>
+                <div class="flow-box frontend">
+                    <h4>📝 Display Narrative</h4>
+                    <p>+ Mandatory Disclaimer</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-block">
+<span class="comment">// Example AI Narrative Output</span>
+
+<span class="string">"The EMA Signal chart indicates a BULLISH direction based on the EMA stack
+configuration showing 8 > 21 > 55 alignment. The RSI Divergence chart indicates
+a BEARISH direction due to momentum divergence patterns detected at current levels.
+These two charts present contradictory signals. The MACD Crossover chart confirms
+the BULLISH direction shown by the EMA Signal with a positive histogram reading."</span>
+
+<span class="comment">// Mandatory Disclaimer (ALWAYS appended)</span>
+<span class="key">"This is a description of what your charts are showing.
+The interpretation and any decision is entirely yours."</span>
+        </div>
+
+        <div class="constitutional-rule">
+            <h5>⚖️ Constitutional Rule #3</h5>
+            <p>AI output is <strong>DESCRIPTIVE ONLY</strong>. The narrative describes what charts show — it never recommends actions. Words like "should", "recommend", "suggest", "consider", "buy", "sell" are <strong>PROHIBITED</strong>.</p>
+        </div>
+    </div>
+
+    <!-- Section 6: Kite Integration -->
+    <div class="section">
+        <h2 class="section-title">
+            <span class="icon" style="background: var(--cyan);">🔗</span>
+            6. Zerodha Kite Integration Flow
+        </h2>
+
+        <div class="process-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h5>User Initiates Connection</h5>
+                <p>Clicks "Connect to Kite" → Redirects to: <code>/api/v1/platforms/kite/login</code></p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h5>Zerodha OAuth Login</h5>
+                <p>User redirected to Zerodha login page, enters credentials and authorizes app</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h5>OAuth Callback</h5>
+                <p>Zerodha redirects to: <code>/api/v1/platforms/kite/callback?request_token=xxx</code></p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h5>Token Exchange</h5>
+                <p>Backend exchanges request_token for access_token using API secret</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+                <h5>Connection Established</h5>
+                <p>Kite adapter is now connected, user can import watchlists</p>
+            </div>
+        </div>
+
+        <div class="alert-box warning">
+            <strong>Important:</strong> Kite provides <strong>watchlist data only</strong>, NOT indicator signals. For signals with RSI, MACD, EMA values, you must configure TradingView alerts that send webhooks to CIA-SIE.
+        </div>
+    </div>
+
+    <!-- Section 7: Constitutional Rules -->
+    <div class="section">
+        <h2 class="section-title">
+            <span class="icon" style="background: var(--warning);">⚖️</span>
+            7. The Three Constitutional Rules (INVIOLABLE)
+        </h2>
+
+        <div class="constitutional-rule">
+            <h5>🔴 Rule #1: Decision-Support NOT Decision-Making</h5>
+            <p><strong>PROHIBITED:</strong> should, recommend, suggest, consider, buy, sell, action, must, need to</p>
+            <p><strong>ALLOWED:</strong> shows, indicates, displays, presents, describes</p>
+            <p style="margin-top: 10px;"><em>The system informs — it never instructs.</em></p>
+        </div>
+
+        <div class="constitutional-rule">
+            <h5>🟡 Rule #2: Expose Contradictions, NEVER Resolve Them</h5>
+            <p><strong>PROHIBITED:</strong> overall direction, net sentiment, weighted average, primary signal</p>
+            <p><strong>REQUIRED:</strong> Equal visual weight for conflicting signals, no prioritization</p>
+            <p style="margin-top: 10px;"><em>When charts disagree, show BOTH — let the user decide.</em></p>
+        </div>
+
+        <div class="constitutional-rule">
+            <h5>🟢 Rule #3: Descriptive AI, NOT Prescriptive AI</h5>
+            <p><strong>MANDATORY DISCLAIMER:</strong></p>
+            <div class="code-block" style="background: rgba(0,0,0,0.5);">
+"This is a description of what your charts are showing.
+The interpretation and any decision is entirely yours."
+            </div>
+            <p style="margin-top: 10px;"><em>Every AI output must include this exact disclaimer.</em></p>
+        </div>
+    </div>
+
+    <!-- Section 8: API Endpoints -->
+    <div class="section">
+        <h2 class="section-title">
+            <span class="icon" style="background: var(--success);">📚</span>
+            8. Complete API Endpoint Reference
+        </h2>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Method</th>
+                    <th>Endpoint</th>
+                    <th>Purpose</th>
+                    <th>Request Body</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span style="background: #065f46; padding: 4px 8px; border-radius: 4px;">GET</span></td>
+                    <td>/api/v1/instruments/</td>
+                    <td>List all instruments</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><span style="background: #1d4ed8; padding: 4px 8px; border-radius: 4px;">POST</span></td>
+                    <td>/api/v1/instruments/</td>
+                    <td>Create instrument</td>
+                    <td>{ symbol, display_name }</td>
+                </tr>
+                <tr>
+                    <td><span style="background: #065f46; padding: 4px 8px; border-radius: 4px;">GET</span></td>
+                    <td>/api/v1/silos/</td>
+                    <td>List silos (filter by instrument_id)</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><span style="background: #1d4ed8; padding: 4px 8px; border-radius: 4px;">POST</span></td>
+                    <td>/api/v1/silos/</td>
+                    <td>Create silo</td>
+                    <td>{ instrument_id, silo_name, ... }</td>
+                </tr>
+                <tr>
+                    <td><span style="background: #065f46; padding: 4px 8px; border-radius: 4px;">GET</span></td>
+                    <td>/api/v1/charts/</td>
+                    <td>List charts (filter by silo_id)</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><span style="background: #1d4ed8; padding: 4px 8px; border-radius: 4px;">POST</span></td>
+                    <td>/api/v1/charts/</td>
+                    <td>Create chart</td>
+                    <td>{ silo_id, chart_code, chart_name, timeframe, webhook_id }</td>
+                </tr>
+                <tr>
+                    <td><span style="background: #1d4ed8; padding: 4px 8px; border-radius: 4px;">POST</span></td>
+                    <td>/api/v1/webhook/</td>
+                    <td>Receive TradingView signal</td>
+                    <td>{ webhook_id, direction, signal_type, ... }</td>
+                </tr>
+                <tr>
+                    <td><span style="background: #065f46; padding: 4px 8px; border-radius: 4px;">GET</span></td>
+                    <td>/api/v1/relationships/silo/{id}</td>
+                    <td>Get contradictions & confirmations</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><span style="background: #065f46; padding: 4px 8px; border-radius: 4px;">GET</span></td>
+                    <td>/api/v1/narratives/silo/{id}</td>
+                    <td>Generate AI narrative</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><span style="background: #065f46; padding: 4px 8px; border-radius: 4px;">GET</span></td>
+                    <td>/api/v1/platforms/kite/login</td>
+                    <td>Initiate Kite OAuth</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><span style="background: #065f46; padding: 4px 8px; border-radius: 4px;">GET</span></td>
+                    <td>/api/v1/platforms/kite/status</td>
+                    <td>Check Kite connection status</td>
+                    <td>—</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Section 9: Complete User Journey -->
+    <div class="section">
+        <h2 class="section-title">
+            <span class="icon" style="background: var(--primary);">🚀</span>
+            9. Complete User Journey (End-to-End)
+        </h2>
+
+        <div class="process-step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+                <h5>Setup Phase</h5>
+                <p>User creates Instrument (e.g., "GOLDBEES") → Creates Silo (e.g., "Daily Analysis") → Creates Charts with unique webhook_ids</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+                <h5>TradingView Configuration</h5>
+                <p>User creates alerts in TradingView pointing to CIA-SIE webhook URL with the chart's webhook_id</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+                <h5>Signals Flow In</h5>
+                <p>As market conditions change, TradingView alerts fire → Webhooks hit CIA-SIE → Signals stored</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+                <h5>View Dashboard</h5>
+                <p>User sees all instruments with their current direction and freshness status at a glance</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">5</div>
+            <div class="step-content">
+                <h5>Drill Down</h5>
+                <p>User clicks instrument → sees silos → clicks silo → sees all charts with their signals</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">6</div>
+            <div class="step-content">
+                <h5>Review Contradictions</h5>
+                <p>If charts disagree, contradiction alert is shown. User sees BOTH signals with equal weight.</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">7</div>
+            <div class="step-content">
+                <h5>Read AI Narrative</h5>
+                <p>AI describes what charts show in plain English. User reads description + mandatory disclaimer.</p>
+            </div>
+        </div>
+
+        <div class="process-step">
+            <div class="step-number">8</div>
+            <div class="step-content">
+                <h5>User Makes Decision</h5>
+                <p><strong>The human user — NOT the system — decides what action to take.</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div style="text-align: center; padding: 40px; color: #64748b;">
+        <p>CIA-SIE — Chart Intelligence Auditor & Signal Intelligence Engine</p>
+        <p style="margin-top: 10px; font-size: 14px;">Decision-Support System with Constitutional Guardrails</p>
+        <p style="margin-top: 20px; font-size: 12px;">Generated: January 3, 2026</p>
+    </div>
+</body>
+</html>
